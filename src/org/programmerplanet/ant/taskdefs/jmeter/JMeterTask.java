@@ -155,15 +155,15 @@ public class JMeterTask extends Task {
 	 */
 	private void validate() throws BuildException {
 		if (jmeterHome == null || !jmeterHome.isDirectory()) {
-			throw new BuildException("You must set jmeterhome to your JMeter install directory.", location);
+			throw new BuildException("You must set jmeterhome to your JMeter install directory.", getLocation());
 		}
 
 		if (!(jmeterJar.exists() && jmeterJar.isFile())) {
-			throw new BuildException("jmeterhome does not appear to contain a valid JMeter installation.", location);
+			throw new BuildException("jmeterhome does not appear to contain a valid JMeter installation.", getLocation());
 		}
 
 		if (resultLog == null) {
-			throw new BuildException("You must set resultLog.", location);
+			throw new BuildException("You must set resultLog.", getLocation());
 		}
 	}
 
@@ -242,7 +242,7 @@ public class JMeterTask extends Task {
 		try {
 			execute.execute();
 		} catch (IOException e) {
-			throw new BuildException("JMeter execution failed.", e, location);
+			throw new BuildException("JMeter execution failed.", e, getLocation());
 		}
 	}
 
