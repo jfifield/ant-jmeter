@@ -98,6 +98,10 @@ public class JMeterTask extends Task {
 	 * @see org.apache.tools.ant.Task#execute()
 	 */
 	public void execute() throws BuildException {
+		if (jmeterHome == null || !jmeterHome.isDirectory()) {
+			throw new BuildException("You must set jmeterhome to your JMeter install directory.", getLocation());
+		}
+
 		jmeterJar = new File(jmeterHome.getAbsolutePath() + File.separator + "bin" + File.separator + "ApacheJMeter.jar");
 
 		validate();
@@ -154,12 +158,8 @@ public class JMeterTask extends Task {
 	 * Validate the task attributes.
 	 */
 	private void validate() throws BuildException {
-		if (jmeterHome == null || !jmeterHome.isDirectory()) {
-			throw new BuildException("You must set jmeterhome to your JMeter install directory.", getLocation());
-		}
-
 		if (!(jmeterJar.exists() && jmeterJar.isFile())) {
-			throw new BuildException("jmeterhome does not appear to contain a valid JMeter installation.", getLocation());
+			throw new BuildException("jmeter jar file not found or not a valid file: " + jmeterJar.getAbsolutePath(), getLocation());
 		}
 
 		if (resultLog == null) {
