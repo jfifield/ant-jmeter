@@ -131,19 +131,22 @@ public class JMeterTask extends Task {
 	 * Validate the results.
 	 */
 	private void checkForFailures() throws BuildException {
-		BufferedReader LINE;
-		String linedata = "";
+		BufferedReader reader = null;
 		try {
-			LINE = new BufferedReader(new FileReader(getResultLog()));
+			reader = new BufferedReader(new FileReader(getResultLog()));
 			//look for any success="false"
-			while ((linedata = LINE.readLine()) != null) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				line = line.toLowerCase();
 				//throw Error if there are failures.
-				if (linedata.toLowerCase().indexOf("success=\"false\"") > 0) {
+				if (line.indexOf("success=\"false\"") > 0 || line.indexOf(" s=\"false\"") > 0) {
 					setFailure(getFailureProperty());
 				}
 			}
 		} catch (IOException e) {
 			setFailure(getFailureProperty());
+		} finally {
+			try { reader.close(); } catch (Exception e) { /* ignore */ }
 		}
 	}
 
