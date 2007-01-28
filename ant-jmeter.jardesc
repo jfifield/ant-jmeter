@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jardesc>
     <jar path="C:/eclipse/workspace/ant-jmeter/ant-jmeter.jar"/>
-    <options overwrite="false" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/ant-jmeter/ant-jmeter.jardesc" useSourceFolders="false" buildIfNeeded="true" includeDirectoryEntries="false"/>
+    <options overwrite="false" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/ant-jmeter/ant-jmeter.jardesc" useSourceFolders="false" buildIfNeeded="true" includeDirectoryEntries="false" storeRefactorings="false"/>
+    <storedRefactorings structuralOnly="false" deprecationInfo="true"/>
+    <selectedProjects/>
     <manifest manifestVersion="1.0" usesManifest="true" reuseManifest="false" saveManifest="false" generateManifest="true" manifestLocation="/sshtunnel/META-INF/MANIFEST.MF">
         <sealing sealJar="false">
             <packagesToSeal/>
