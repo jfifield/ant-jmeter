@@ -1,9 +1,9 @@
 package org.programmerplanet.ant.taskdefs.jmeter;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -135,22 +135,26 @@ public class JMeterTask extends Task {
 	 * Validate the results.
 	 */
 	private void checkForFailures() throws BuildException {
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(getResultLog()));
-			//look for any success="false"
-			String line = null;
-			while ((line = reader.readLine()) != null) {
-				line = line.toLowerCase();
-				//throw Error if there are failures.
-				if (line.indexOf("success=\"false\"") > 0 || line.indexOf(" s=\"false\"") > 0) {
-					setFailure(getFailureProperty());
+		if (failureProperty != null && failureProperty.trim().length() > 0) {
+			log("Checking result log file " + getResultLog().getName() + ".", Project.MSG_VERBOSE);
+			LineNumberReader reader = null;
+			try {
+				reader = new LineNumberReader(new FileReader(getResultLog()));
+				// look for any success="false" (pre 2.1) or s="false" (post 2.1)
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					line = line.toLowerCase();
+					// set failure property if there are failures
+					if (line.indexOf("success=\"false\"") > 0 || line.indexOf(" s=\"false\"") > 0) {
+						log("Failure detected at line: " + reader.getLineNumber(), Project.MSG_VERBOSE);
+						setFailure(getFailureProperty());
+					}
 				}
+			} catch (IOException e) {
+				throw new BuildException("Could not read jmeter resultLog: "+e.getMessage());
+			} finally {
+				try { reader.close(); } catch (Exception e) { /* ignore */ }
 			}
-		} catch (IOException e) {
-			setFailure(getFailureProperty());
-		} finally {
-			try { reader.close(); } catch (Exception e) { /* ignore */ }
 		}
 	}
 
