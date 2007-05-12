@@ -58,6 +58,11 @@ public class JMeterTask extends Task {
 	 */
 	private File resultLog;
 
+    /**
+     * The directory need to save all result log files.
+     */
+    private File resultLogDir;
+
 	/**
 	 * A collection of FileSets specifying test plans to execute.
 	 */
@@ -108,6 +113,11 @@ public class JMeterTask extends Task {
 	 * Indicate if build to be forcefully failed upon testcase failure.
 	 */
 	private String failureProperty;
+	
+	/**
+	 * List of result log files used during run.
+	 */
+	private ArrayList resultLogFiles = new ArrayList();
 
 	/**
 	 * @see org.apache.tools.ant.Task#execute()
@@ -126,7 +136,14 @@ public class JMeterTask extends Task {
 
 		// execute the single test plan if specified
 		if (testPlan != null) {
-			executeTestPlan(testPlan);
+			File resultLogFile = resultLog;
+			if (resultLogDir != null)
+			{
+                String testPlanFileName = testPlan.getName();
+				String resultLogFilePath = this.resultLogDir + File.separator + testPlanFileName.replaceFirst("\\.jmx", "\\.jtl");
+                resultLogFile = new File(resultLogFilePath);
+			}
+			executeTestPlan(testPlan, resultLogFile);
 		}
 
 		// execute each of the test plans specified in each of the "testplans" FileSets
@@ -138,8 +155,15 @@ public class JMeterTask extends Task {
 			String[] files = scanner.getIncludedFiles();
 
 			for (int i = 0; i < files.length; i++) {
-				String testPlanFile = baseDir + File.separator + files[i];
-				executeTestPlan(new File(testPlanFile));
+				String testPlanFilePath = baseDir + File.separator + files[i];
+				File testPlanFile = new File(testPlanFilePath);
+				File resultLogFile = resultLog;
+				if (resultLogDir != null)
+				{
+					String resultLogFilePath = this.resultLogDir + File.separator + files[i].replaceFirst("\\.jmx", "\\.jtl");
+	                resultLogFile = new File(resultLogFilePath);
+				}
+				executeTestPlan(testPlanFile, resultLogFile);
 			}
 		}
 
@@ -151,24 +175,28 @@ public class JMeterTask extends Task {
 	 */
 	private void checkForFailures() throws BuildException {
 		if (failureProperty != null && failureProperty.trim().length() > 0) {
-			log("Checking result log file " + getResultLog().getName() + ".", Project.MSG_VERBOSE);
-			LineNumberReader reader = null;
-			try {
-				reader = new LineNumberReader(new FileReader(getResultLog()));
-				// look for any success="false" (pre 2.1) or s="false" (post 2.1)
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					line = line.toLowerCase();
-					// set failure property if there are failures
-					if (line.indexOf("success=\"false\"") > 0 || line.indexOf(" s=\"false\"") > 0) {
-						log("Failure detected at line: " + reader.getLineNumber(), Project.MSG_VERBOSE);
-						setFailure(getFailureProperty());
+			for (Iterator i = resultLogFiles.iterator(); i.hasNext();) {
+				File resultLogFile = (File)i.next();
+				log("Checking result log file " + resultLogFile.getName() + ".", Project.MSG_VERBOSE);
+				LineNumberReader reader = null;
+				try {
+					reader = new LineNumberReader(new FileReader(resultLogFile));
+					// look for any success="false" (pre 2.1) or s="false" (post 2.1)
+					String line = null;
+					while ((line = reader.readLine()) != null) {
+						line = line.toLowerCase();
+						// set failure property if there are failures
+						if (line.indexOf("success=\"false\"") > 0 || line.indexOf(" s=\"false\"") > 0) {
+							log("Failure detected at line: " + reader.getLineNumber(), Project.MSG_VERBOSE);
+							setFailure(getFailureProperty());
+							return;
+						}
 					}
+				} catch (IOException e) {
+					throw new BuildException("Could not read jmeter resultLog: " + e.getMessage());
+				} finally {
+					try { reader.close(); } catch (Exception e) { /* ignore */ }
 				}
-			} catch (IOException e) {
-				throw new BuildException("Could not read jmeter resultLog: "+e.getMessage());
-			} finally {
-				try { reader.close(); } catch (Exception e) { /* ignore */ }
 			}
 		}
 	}
@@ -180,18 +208,23 @@ public class JMeterTask extends Task {
 		if (!(jmeterJar.exists() && jmeterJar.isFile())) {
 			throw new BuildException("jmeter jar file not found or not a valid file: " + jmeterJar.getAbsolutePath(), getLocation());
 		}
-
-		if (resultLog == null) {
-			throw new BuildException("You must set resultLog.", getLocation());
+		
+		if (resultLog == null && resultLogDir == null) {
+			throw new BuildException("You must set resultLog or resultLogDir.", getLocation());
+		}
+		
+		if (resultLogDir != null && !(resultLogDir.exists() && resultLogDir.isDirectory())) {
+			throw new BuildException("resultLogDir directory not found or not a valid directory: " + resultLog.getAbsolutePath(), getLocation());
 		}
 	}
 
 	/**
 	 * Execute a JMeter test plan.
 	 */
-	private void executeTestPlan(File testPlanFile) {
-		log("Executing test plan: " + testPlanFile, Project.MSG_INFO);
-
+	private void executeTestPlan(File testPlanFile, File resultLogFile) {
+		log("Executing test plan: " + testPlanFile + " ==> " + resultLogFile, Project.MSG_INFO);
+		resultLogFiles.add(resultLogFile);
+		
 		CommandlineJava cmd = new CommandlineJava();
 
 		cmd.setJar(jmeterJar.getAbsolutePath());
@@ -215,7 +248,7 @@ public class JMeterTask extends Task {
 		cmd.createArgument().setValue(testPlanFile.getAbsolutePath());
 		// the result log file
 		cmd.createArgument().setValue("-l");
-		cmd.createArgument().setValue(resultLog.getAbsolutePath());
+		cmd.createArgument().setValue(resultLogFile.getAbsolutePath());
 		//run remote servers?
 		if (runRemote) {
 			cmd.createArgument().setValue("-r");
@@ -296,6 +329,14 @@ public class JMeterTask extends Task {
 	public File getResultLog() {
 		return resultLog;
 	}
+
+    public void setResultLogDir(File resultLogDir) {
+        this.resultLogDir = resultLogDir;
+    }
+    
+    public File getResultLogDir() {
+        return this.resultLogDir;
+    }
 
 	public void addTestPlans(FileSet set) {
 		testPlans.add(set);
