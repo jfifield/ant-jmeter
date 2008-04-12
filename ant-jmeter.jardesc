@@ -1,16 +1,16 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="WINDOWS-1252"?>
 <jardesc>
-    <jar path="C:/eclipse/workspace/ant-jmeter/ant-jmeter.jar"/>
-    <options overwrite="false" compress="true" exportErrors="true" exportWarnings="true" saveDescription="true" descriptionLocation="/ant-jmeter/ant-jmeter.jardesc" useSourceFolders="false" buildIfNeeded="true" includeDirectoryEntries="false" storeRefactorings="false"/>
-    <storedRefactorings structuralOnly="false" deprecationInfo="true"/>
-    <selectedProjects/>
-    <manifest manifestVersion="1.0" usesManifest="true" reuseManifest="false" saveManifest="false" generateManifest="true" manifestLocation="/sshtunnel/META-INF/MANIFEST.MF">
-        <sealing sealJar="false">
-            <packagesToSeal/>
-            <packagesToUnSeal/>
-        </sealing>
-    </manifest>
-    <selectedElements exportClassFiles="true" exportOutputFolder="false" exportJavaFiles="true">
-        <javaElement handleIdentifier="=ant-jmeter/src"/>
-    </selectedElements>
+<jar path="C:/eclipse/workspace/ant-jmeter/ant-jmeter-1.0.9.jar"/>
+<options buildIfNeeded="true" compress="true" descriptionLocation="/ant-jmeter/ant-jmeter.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+<storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+<selectedProjects/>
+<manifest generateManifest="true" manifestLocation="/sshtunnel/META-INF/MANIFEST.MF" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+<sealing sealJar="false">
+<packagesToSeal/>
+<packagesToUnSeal/>
+</sealing>
+</manifest>
+<selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+<javaElement handleIdentifier="=ant-jmeter/src"/>
+</selectedElements>
 </jardesc>
