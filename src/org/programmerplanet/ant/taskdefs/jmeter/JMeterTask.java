@@ -58,10 +58,10 @@ public class JMeterTask extends Task {
 	 */
 	private File resultLog;
 
-    /**
-     * The directory need to save all result log files.
-     */
-    private File resultLogDir;
+	/**
+	 * The directory need to save all result log files.
+	 */
+	private File resultLogDir;
 
 	/**
 	 * A collection of FileSets specifying test plans to execute.
@@ -103,6 +103,11 @@ public class JMeterTask extends Task {
 	 * Array of arguments to be passed to the JVM that will run JMeter.
 	 */
 	private ArrayList jvmArgs = new ArrayList();
+
+	/**
+	 * Array of arguments to be passed to JMeter.
+	 */
+	private ArrayList jmeterArgs = new ArrayList();
 
 	/**
 	 * Array of properties dynamically passed to JMeter
@@ -236,6 +241,13 @@ public class JMeterTask extends Task {
 			cmd.createVmArgument().setValue(jvmArg.getValue());
 		}
 
+		// Set the JMeter args
+		Iterator jmeterArgIterator = jmeterArgs.iterator();
+		while (jmeterArgIterator.hasNext()) {
+			Arg jmeterArg = (Arg)jmeterArgIterator.next();
+			cmd.createArgument().setValue(jmeterArg.getValue());
+		}
+
 		// non-gui mode
 		cmd.createArgument().setValue("-n");
 		// the properties file
@@ -344,6 +356,10 @@ public class JMeterTask extends Task {
 
 	public void addJvmarg(Arg arg) {
 		jvmArgs.add(arg);
+	}
+
+	public void addJmeterarg(Arg arg) {
+		jmeterArgs.add(arg);
 	}
 
 	public void setRunRemote(boolean runRemote) {
