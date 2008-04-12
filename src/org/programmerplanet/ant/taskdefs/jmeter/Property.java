@@ -17,11 +17,11 @@ package org.programmerplanet.ant.taskdefs.jmeter;
 
 /**
  * Used as an inner tag to capture arguments for runtime JMeter properties.
- *
+ * 
  * @author <a href="mailto:xknight@users.sourceforge.net">Christopher Ottley</a>
  */
 public final class Property {
-	
+
 	private String name = "";
 	private String value = "";
 
@@ -48,4 +48,5 @@ public final class Property {
 	public String toString() {
 		return name + "=" + value;
 	}
+
 }

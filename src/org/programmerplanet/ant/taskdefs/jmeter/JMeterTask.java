@@ -33,7 +33,7 @@ import org.apache.tools.ant.types.FileSet;
 
 /**
  * Runs one or more JMeter test plans sequentially.
- *
+ * 
  * @author <a href="mailto:jfifield@programmerplanet.org">Joseph Fifield</a>
  */
 public class JMeterTask extends Task {
@@ -118,7 +118,7 @@ public class JMeterTask extends Task {
 	 * Indicate if build to be forcefully failed upon testcase failure.
 	 */
 	private String failureProperty;
-	
+
 	/**
 	 * List of result log files used during run.
 	 */
@@ -142,11 +142,10 @@ public class JMeterTask extends Task {
 		// execute the single test plan if specified
 		if (testPlan != null) {
 			File resultLogFile = resultLog;
-			if (resultLogDir != null)
-			{
-                String testPlanFileName = testPlan.getName();
+			if (resultLogDir != null) {
+				String testPlanFileName = testPlan.getName();
 				String resultLogFilePath = this.resultLogDir + File.separator + testPlanFileName.replaceFirst("\\.jmx", "\\.jtl");
-                resultLogFile = new File(resultLogFilePath);
+				resultLogFile = new File(resultLogFilePath);
 			}
 			executeTestPlan(testPlan, resultLogFile);
 		}
@@ -163,10 +162,9 @@ public class JMeterTask extends Task {
 				String testPlanFilePath = baseDir + File.separator + files[i];
 				File testPlanFile = new File(testPlanFilePath);
 				File resultLogFile = resultLog;
-				if (resultLogDir != null)
-				{
+				if (resultLogDir != null) {
 					String resultLogFilePath = this.resultLogDir + File.separator + files[i].replaceFirst("\\.jmx", "\\.jtl");
-	                resultLogFile = new File(resultLogFilePath);
+					resultLogFile = new File(resultLogFilePath);
 				}
 				executeTestPlan(testPlanFile, resultLogFile);
 			}
@@ -197,10 +195,16 @@ public class JMeterTask extends Task {
 							return;
 						}
 					}
-				} catch (IOException e) {
+				}
+				catch (IOException e) {
 					throw new BuildException("Could not read jmeter resultLog: " + e.getMessage());
-				} finally {
-					try { reader.close(); } catch (Exception e) { /* ignore */ }
+				}
+				finally {
+					try {
+						reader.close();
+					}
+					catch (Exception e) { /* ignore */
+					}
 				}
 			}
 		}
@@ -213,11 +217,11 @@ public class JMeterTask extends Task {
 		if (!(jmeterJar.exists() && jmeterJar.isFile())) {
 			throw new BuildException("jmeter jar file not found or not a valid file: " + jmeterJar.getAbsolutePath(), getLocation());
 		}
-		
+
 		if (resultLog == null && resultLogDir == null) {
 			throw new BuildException("You must set resultLog or resultLogDir.", getLocation());
 		}
-		
+
 		if (resultLogDir != null && !(resultLogDir.exists() && resultLogDir.isDirectory())) {
 			throw new BuildException("resultLogDir directory not found or not a valid directory: " + resultLog.getAbsolutePath(), getLocation());
 		}
@@ -229,7 +233,7 @@ public class JMeterTask extends Task {
 	private void executeTestPlan(File testPlanFile, File resultLogFile) {
 		log("Executing test plan: " + testPlanFile + " ==> " + resultLogFile, Project.MSG_INFO);
 		resultLogFiles.add(resultLogFile);
-		
+
 		CommandlineJava cmd = new CommandlineJava();
 
 		cmd.setJar(jmeterJar.getAbsolutePath());
@@ -261,7 +265,7 @@ public class JMeterTask extends Task {
 		// the result log file
 		cmd.createArgument().setValue("-l");
 		cmd.createArgument().setValue(resultLogFile.getAbsolutePath());
-		//run remote servers?
+		// run remote servers?
 		if (runRemote) {
 			cmd.createArgument().setValue("-r");
 		}
@@ -305,7 +309,8 @@ public class JMeterTask extends Task {
 
 		try {
 			execute.execute();
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			throw new BuildException("JMeter execution failed.", e, getLocation());
 		}
 	}
@@ -342,13 +347,13 @@ public class JMeterTask extends Task {
 		return resultLog;
 	}
 
-    public void setResultLogDir(File resultLogDir) {
-        this.resultLogDir = resultLogDir;
-    }
-    
-    public File getResultLogDir() {
-        return this.resultLogDir;
-    }
+	public void setResultLogDir(File resultLogDir) {
+		this.resultLogDir = resultLogDir;
+	}
+
+	public File getResultLogDir() {
+		return this.resultLogDir;
+	}
 
 	public void addTestPlans(FileSet set) {
 		testPlans.add(set);
