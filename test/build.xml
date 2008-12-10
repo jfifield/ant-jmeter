@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="testproject" default="test">
+
+	<taskdef
+    	name="jmeter"
+    	classname="org.programmerplanet.ant.taskdefs.jmeter.JMeterTask"/>
+
+	<target name="test">
+	
+		<!--
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-1.9.1"
+		    resultlogdir="${basedir}"
+		    failureProperty="test.failed_1_9_1_A">
+			<testplans dir="C:/jmeter/jakarta-jmeter-1.9.1/testplans/"/>
+		</jmeter>
+		<echo message="Failure 1.9.1 A: ${test.failed_1_9_1_A}"/>
+		-->
+
+		<!--
+		    resultlog="${basedir}/results-1.9.1-A.jtl"
+		    testplan="C:/jmeter/jakarta-jmeter-1.9.1/testplans/TestPlan.jmx"
+		-->
+		
+		<!-- 
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-1.9.1"
+		    testplan="C:/jmeter/jakarta-jmeter-1.9.1/testplans/TestPlan2.jmx"
+		    resultlog="${basedir}/results-1.9.1-B.jtl"
+		    failureProperty="test.failed_1_9_1_B"/>
+		<echo message="Failure 1.9.1 B: ${test.failed_1_9_1_B}"/>
+		
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-2.1"
+		    testplan="C:/jmeter/jakarta-jmeter-2.1/testplans/TestPlan.jmx"
+		    resultlog="${basedir}/results-2.1-A.jtl"
+		    failureProperty="test.failed_2_1_A"/>
+		<echo message="Failure 2.1 A: ${test.failed_2_1_A}"/>
+
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-2.1"
+		    testplan="C:/jmeter/jakarta-jmeter-2.1/testplans/TestPlan2.jmx"
+		    resultlog="${basedir}/results-2.1-B.jtl"
+		    failureProperty="test.failed_2_1_B"/>
+		<echo message="Failure 2.1 B: ${test.failed_2_1_B}"/>
+		
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-2.2"
+		    testplan="C:/jmeter/jakarta-jmeter-2.2/testplans/TestPlan.jmx"
+		    resultlog="${basedir}/results-2.2-A.jtl"
+		    failureProperty="test.failed_2_2_A"/>
+		<echo message="Failure 2.2 A: ${test.failed_2_2_A}"/>
+
+		 -->
+		<jmeter
+    		jmeterhome="C:/jmeter/jakarta-jmeter-2.2"
+		    testplan="C:/jmeter/jakarta-jmeter-2.2/testplans/TestPlan2.jmx"
+		    resultlog="${basedir}/results-2.2-B.jtl"
+		    failureProperty="test.failed_2_2_B">
+			<jmeterarg value="--loglevel"/>
+			<jmeterarg value="jmeter.util=DEBUG"/>
+		</jmeter>
+		<echo message="Failure 2.2 B: ${test.failed_2_2_B}"/>
+
+	</target>
+
+</project>
