@@ -19,11 +19,13 @@ package org.programmerplanet.ant.taskdefs.jmeter;
  * Used as an inner tag to capture arguments for runtime JMeter properties.
  * 
  * @author <a href="mailto:xknight@users.sourceforge.net">Christopher Ottley</a>
+ * @author <a href="mailto:jfifield@programmerplanet.org">Joseph Fifield</a>
  */
 public final class Property {
 
 	private String name = "";
 	private String value = "";
+	private boolean remote = false;
 
 	public void setName(String arg) {
 		name = arg.trim();
@@ -39,6 +41,14 @@ public final class Property {
 
 	public String getValue() {
 		return value;
+	}
+
+	public void setRemote(boolean remote) {
+		this.remote = remote;
+	}
+
+	public boolean isRemote() {
+		return remote;
 	}
 
 	public boolean isValid() {

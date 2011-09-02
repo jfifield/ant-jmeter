@@ -296,7 +296,7 @@ public class JMeterTask extends Task {
 		while (jmPropertyIterator.hasNext()) {
 			Property jmProperty = (Property)jmPropertyIterator.next();
 			if (jmProperty.isValid()) {
-				cmd.createArgument().setValue("-J" + jmProperty.toString());
+				cmd.createArgument().setValue((jmProperty.isRemote() ? "-G" : "-J") + jmProperty.toString());
 			}
 		}
 
