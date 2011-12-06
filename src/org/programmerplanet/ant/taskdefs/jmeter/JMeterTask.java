@@ -57,7 +57,12 @@ public class JMeterTask extends Task {
 	 * The file to log results to.
 	 */
 	private File resultLog;
-
+	
+	/**
+	 * The jmeter log file.
+	 */
+	private File jmeterLogFile;
+	
 	/**
 	 * The directory need to save all result log files.
 	 */
@@ -259,6 +264,11 @@ public class JMeterTask extends Task {
 			cmd.createArgument().setValue("-p");
 			cmd.createArgument().setValue(jmeterProperties.getAbsolutePath());
 		}
+		// the jmeter log file
+		if (jmeterLogFile != null) {
+			cmd.createArgument().setValue("-j");
+			cmd.createArgument().setValue(jmeterLogFile.getAbsolutePath());
+		}
 		// the test plan file
 		cmd.createArgument().setValue("-t");
 		cmd.createArgument().setValue(testPlanFile.getAbsolutePath());
@@ -345,6 +355,14 @@ public class JMeterTask extends Task {
 
 	public File getResultLog() {
 		return resultLog;
+	}	
+
+	public File getJmeterLogFile() {
+		return jmeterLogFile;
+	}
+
+	public void setJmeterLogFile(File jmeterLogFile) {
+		this.jmeterLogFile = jmeterLogFile;
 	}
 
 	public void setResultLogDir(File resultLogDir) {
