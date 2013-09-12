@@ -48,6 +48,14 @@ public class JMeterTask extends Task {
 	 */
 	private File jmeterProperties;
 
+	
+	/**
+	 * Additional user property file to use
+	 */
+	private File additionalUserProperties;
+	
+	
+
 	/**
 	 * The test plan to execute.
 	 */
@@ -269,6 +277,12 @@ public class JMeterTask extends Task {
 			cmd.createArgument().setValue("-j");
 			cmd.createArgument().setValue(jmeterLogFile.getAbsolutePath());
 		}
+		
+		// add user property
+		if (additionalUserProperties != null) {
+					cmd.createArgument().setValue("-q");
+					cmd.createArgument().setValue(additionalUserProperties.getAbsolutePath());
+				}
 		// the test plan file
 		cmd.createArgument().setValue("-t");
 		cmd.createArgument().setValue(testPlanFile.getAbsolutePath());
@@ -441,4 +455,12 @@ public class JMeterTask extends Task {
 		getProject().setProperty(failureProperty, "true");
 	}
 
+	public File getAdditionalUserProperties() {
+		return additionalUserProperties;
+	}
+
+	public void setAdditionalUserProperties(File additionalUserProperties) {
+		this.additionalUserProperties = additionalUserProperties;
+	}
+	
 }
